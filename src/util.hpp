@@ -25,10 +25,6 @@ namespace twitls {
 			}
 			return rtn;
 		}
-		void print( std::vector<std::string> const& vecInput )
-		{
-			std::copy( vecInput.begin(), vecInput.end(), std::ostream_iterator<std::string>( std::cout, " " ) );
-		}
 	}
 	namespace imgExt {
 		bool is_image_extension( std::string input )
@@ -54,6 +50,14 @@ namespace twitls {
 				}
 			}
 			return numFiles;
+		}
+		int countLines(std::string& inputFile) 
+		{
+			std::ifstream inFile(inputFile);
+			inFile.unsetf(std::ios_base::skipws);
+			unsigned count = std::count(std::istream_iterator<char>(inFile), 
+				std::istream_iterator<char>(), '\n');
+			return count;
 		}
 		auto diff( int dimension, int tileSize )
 		{
@@ -97,6 +101,16 @@ namespace twitls {
 			}
 			return randString;
 		}
+		std::string randomWordsFromVector(std::vector<std::string>& inputVector) {
+			std::string chooseWord;
+			std::vector<std::string> v = inputVector;
+			std::random_device seed01;
+			std::mt19937 engine01(seed01());
+			std::uniform_int_distribution<int> choose01(0, v.size() - 1);
+
+			chooseWord = v[choose01(engine01)];
+			return chooseWord;
+		}
 		int randomNumber( const int low, const int high )
 		{
 			std::random_device rd;
@@ -138,50 +152,90 @@ namespace twitls {
 		}
 		Magick::FilterType filtersYo()
 		{
-			const Magick::FilterType samList2[21] = { Magick::BlackmanFilter,
-													Magick::BohmanFilter,
-													Magick::BoxFilter,
-													Magick::CatromFilter,
-													Magick::CosineFilter,
-													Magick::CubicFilter,
-													Magick::HannFilter,
-													Magick::HermiteFilter,
-													Magick::JincFilter,
-													Magick::KaiserFilter,
-													Magick::LagrangeFilter,
-													Magick::Lanczos2Filter,
-													Magick::MitchellFilter,
-													Magick::ParzenFilter,
-													Magick::PointFilter,
-													Magick::QuadraticFilter,
-													Magick::RobidouxFilter,
-													Magick::SincFilter,
-													Magick::SplineFilter,
-													Magick::TriangleFilter,
-													Magick::WelchFilter };
-			return samList2[rand() % 21];
+			std::vector<Magick::FilterType> samList02{	Magick::BlackmanFilter,
+														Magick::BohmanFilter,
+														Magick::BoxFilter,
+														Magick::CatromFilter,
+														Magick::CosineFilter,
+														Magick::CubicFilter,
+														Magick::HannFilter,
+														Magick::HermiteFilter,
+														Magick::JincFilter,
+														Magick::KaiserFilter,
+														Magick::LagrangeFilter,
+														Magick::Lanczos2Filter,
+														Magick::MitchellFilter,
+														Magick::ParzenFilter,
+														Magick::PointFilter,
+														Magick::QuadraticFilter,
+														Magick::RobidouxFilter,
+														Magick::SincFilter,
+														Magick::SplineFilter,
+														Magick::TriangleFilter,
+														Magick::WelchFilter 
+			};
+			std::mt19937 generator02(std::random_device{}());
+			std::uniform_int_distribution<std::size_t> distribution02(0, samList02.size() - 1);
+			std::size_t number02 = distribution02(generator02);
+			return samList02[number02];
 		}
 		Magick::FilterType filtersYoSharp()
 		{
-			const Magick::FilterType samList3[8] = { Magick::PointFilter,
-													Magick::BoxFilter,
-													Magick::TriangleFilter,
-													Magick::Lanczos2Filter,
-													Magick::CubicFilter,
-													Magick::JincFilter,
-													Magick::CosineFilter,
-													Magick::SincFilter };
-			return samList3[rand() % 8];
+			std::vector<Magick::FilterType> samList03{	Magick::PointFilter,
+														Magick::BoxFilter,
+														Magick::TriangleFilter,
+														Magick::Lanczos2Filter,
+														Magick::CubicFilter,
+														Magick::JincFilter,
+														Magick::CosineFilter,
+														Magick::SincFilter 
+			};
+			std::mt19937 generator03(std::random_device{}());
+			std::uniform_int_distribution<std::size_t> distribution03(0, samList03.size() - 1);
+			std::size_t number03 = distribution03(generator03);
+			return samList03[number03];
+		}
+		Magick::CompositeOperator compOps()
+		{
+			std::vector<Magick::CompositeOperator> opsList{	Magick::OverlayCompositeOp,
+															Magick::ScreenCompositeOp,
+															Magick::ColorDodgeCompositeOp,
+															Magick::MultiplyCompositeOp,
+															Magick::LinearBurnCompositeOp,
+															Magick::ExclusionCompositeOp 
+			};
+			std::mt19937 generator04(std::random_device{}());
+			std::uniform_int_distribution<std::size_t> distribution04(0, opsList.size() - 1);
+			std::size_t number04 = distribution04(generator04);
+			return opsList[number04];
+		}
+		Magick::CompositeOperator compOps2()
+		{
+			std::vector<Magick::CompositeOperator> opsList2{	Magick::OverlayCompositeOp,
+																Magick::SoftLightCompositeOp,
+																Magick::SaturateCompositeOp,
+																Magick::BumpmapCompositeOp,
+																Magick::ColorizeCompositeOp,
+																Magick::BumpmapCompositeOp 
+			};
+			std::mt19937 generator05(std::random_device{}());
+			std::uniform_int_distribution<std::size_t> distribution05(0, opsList2.size() - 1);
+			std::size_t number05 = distribution05(generator05);
+			return opsList2[number05];
 		}
 		std::string samplesYo()
 		{
-			const std::string samplesList[6] = { "4:1:0",
-												"4:1:1",
-												"4:2:0",
-												"4:2:2",
-												"4:4:0",
-												"4:4:4" };
-			return samplesList[rand() % 6];
+			std::vector<std::string> samplesList{	"4:1:0",
+													"4:1:1",
+													"4:2:0",
+													"4:2:2",
+													"4:4:0",
+													"4:4:4" 
+			};
+			std::mt19937 generator06(std::random_device{}());
+			std::uniform_int_distribution<std::size_t> distribution06(0, samplesList.size() - 1);
+			std::size_t number06 = distribution06(generator06);
+			return samplesList[number06];
 		}
 	}
 	namespace scriptmake {
